@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<script type="text/javascript" src="static/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="static/utils.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+</head>
+<body>
+  姓名:<input name="name" id="name"><br/>
+  年龄:<input name ="age" id="age"><br/>
+  照片:<input name="photo" type="file" id="photo"><br/>
+ <input type="button" id="submit" value="提交" style="text-align: center" >
+</body>
+
+
+
+<script type="text/javascript">
+
+    $(function(){
+        $("#submit").click(function (){
+            var reader = new FileReader();
+            var file = document.getElementById("photo").files[0];
+            reader.readAsDataURL(file);
+            reader.onload = function(e) {
+                console.log(reader.result);
+                var encObj = {};
+                //iv=12345678900000001234567890000000;
+                encObj.iv="F1j3PheJa8L5bDE8GrGUb8bKo2g4gDq4nTfbVW0y78n4ZMhgw+j4xaout3kaOuGIagpnH8VgCT0ld4q0CyDcxx/3AFCkgFk94wCVzyZgRBOehW4+Or8pYIV1nLC1pSC0WRsmFk9aiQu5xKvzjTbEpz9nMxpjjnJG3QtIyFEnMUY=";
+                encObj.encData="dNhScOqrxxJY7Mb/bifcVmxcsfPKTAqt0pchz1OBIFw=";
+                var user = {};
+                user.name=$("#name").val();
+                user.age=$("#age").val();
+                //user.photo =  reader.result;
+                $.ajax({
+                    url:"http://localhost:8080/dispatcher",
+                    headers: {
+                        uri:"submit"
+                    },
+                    type:"POST",
+                    contentType:"application/json",
+                    data:JSON.stringify(encObj),
+                    success:function(data){
+                        console.log(data);
+                        var encrypt = new Encrypt();
+                        const key = encrypt.decryptRSA(data.encData);
+
+                        console.log(encryptStr);
+                    }
+                });
+            }
+
+
+        });
+    })
+
+
+
+</script>
+</html>
